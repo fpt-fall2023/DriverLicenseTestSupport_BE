@@ -6,13 +6,16 @@ const router = express.Router();
 
 router.post("/register", authController.signUp);
 router.post("/signin", authController.signIn);
+router.patch('/updateMe', authController.protectRoute, userController.UpdateMe)
+
+router.use(authController.protectRoute);
+
+router.use(authController.grantAccess("admin"));
+
+router.route("/").get(userController.getAllUsers);
 
 router
-  .route("/")
-  .get(
-    authController.protectRoute,
-    authController.grantAccess("admin"),
-    userController.getAllUsers
-  );
-
+  .route("/:id")
+  .delete(userController.deleteUser)
+  .patch(userController.updateUser);
 module.exports = router;

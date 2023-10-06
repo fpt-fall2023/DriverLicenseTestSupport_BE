@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 
 const {
   signAccessToken,
-  verifyAccesstoken,
 } = require("../helpers/jwt_service");
 
 exports.signUp = async (req, res, next) => {
@@ -19,6 +18,7 @@ exports.signUp = async (req, res, next) => {
     const newUser = await User.create(req.body);
 
     newUser.password = undefined;
+    newUser.isActive = undefined;
     res.status(201).json({
       message: "success",
       statusCode: 201,
@@ -38,7 +38,6 @@ exports.signIn = async (req, res, next) => {
     }
 
     const user = await User.findOne({ email }).select("+password");
-    console.log(user);
     if (!user) {
       throw createError.NotFound("User not registered!");
     }
@@ -56,7 +55,6 @@ exports.signIn = async (req, res, next) => {
       statusCode: 200,
       data: {
         accessToken,
-        refreshToken: "afdasdfasdf",
         user,
       },
     });

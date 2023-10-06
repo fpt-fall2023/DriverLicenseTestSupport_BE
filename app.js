@@ -10,20 +10,20 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // 2) Router
-app.use("/users", userRoute);
+app.use("/api/v1/users", userRoute);
 
 // 3) Global Error Handling
-app.use((req, res, next) => {
+app.use((req, res, next) => { // đây là Middleware, vì Middleware chỉ có 3 tham số
   next(createError.NotFound("This route does not exists"));
 });
 
-app.use((error, req, res, next) => {
-  res.json({
-    error: {
-      status: error.status || 500,
-      message: error.message,
-    },
-  });
+app.use((error, req, res, next) => { // hàm xử lý error cần 4 tham số 
+  const statusCode =  error.status || 500
+  res.status(statusCode).json({
+    status: 'error',
+    code: statusCode,
+    message: error.message || 'Internal Server Error'
+  })
 });
 
 module.exports = app;

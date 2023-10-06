@@ -2,28 +2,30 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
+  name: String,
   email: {
     type: String,
-    // required: [true, "email is required"],
+    required: [true, "email is required"],
     unique: true,
   },
   password: {
     type: String,
-    // required: [true, "password is required"],
+    required: [true, "password is required"],
     select: false,
   },
   passwordConfirm: {
     type: String,
-    // required: [true, "confirm password is required"],
-    // validate: {
-    //   validator: function (val) {
-    //     return val === this.password;
-    //   },
-    // },
+    required: [true, "confirm password is required"],
+    validate: {
+      validator: function (val) {
+        return val === this.password;
+      },
+    },
   },
   isActive: {
     type: Boolean,
     default: true,
+    select: false
   },
   role: {
     type: String,
@@ -31,6 +33,20 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "user", "staff", "lecturer"],
   },
   avatar: String,
+  birthdate: {
+    type: Date,
+    validate: {
+      validator: function (value) {
+        if (isNaN(value.getTime())) {
+          return false;
+        }
+        const currentDate = new Date();
+        const age = currentDate.getFullYear() - value.getFullYear();
+        return age >= 18;
+      },
+      message: "Age must be 18 or older",
+    },
+  },
 });
 
 // note: only encrypt password when change password or create new
@@ -43,7 +59,10 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.isCorrectPassword = async function (reqPassword, userDbPassword) {
+userSchema.methods.isCorrectPassword = async function (
+  reqPassword,
+  userDbPassword
+) {
   return await bcrypt.compare(reqPassword, userDbPassword);
 };
 
