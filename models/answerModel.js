@@ -1,7 +1,7 @@
 const monggoose = require("mongoose");
 
 const answerSchema = new monggoose.Schema({
-  answer: String,
+  answerName: String,
   isCorrect: Boolean,
 });
 

@@ -1,30 +1,16 @@
 const express = require("express");
-const Question = require("../models/questionModel");
+const questionController = require("../controllers/questionController");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  try {
-    const { questionName, answers } = req.body;
-    const newQuestion = new Question({ questionName, answers });
-    const savedQuestion = await newQuestion.save();
-    res.json(savedQuestion);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while creating the question." });
-  }
-});
+router
+  .route("/")
+  .get(questionController.getAllQuestion)
+  .post(questionController.createQuestion);
 
-router.get("/questions", async (req, res) => {
-  try {
-    const questions = await Question.find();
-    res.json(questions);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching questions." });
-  }
-});
+router
+  .route("/:id")
+  .delete(questionController.deleteQuestion)
+  .patch(questionController.updateQuestion);
 
 module.exports = router;

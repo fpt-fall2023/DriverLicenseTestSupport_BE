@@ -2,21 +2,21 @@ const createError = require("http-errors");
 const User = require("../models/userModal");
 const factory = require("../controllers/hanlderFactory");
 
-exports.getAllUsers = async (req, res, next) => {
-  try {
-    const users = await User.find({ isActive: true }).select("-__v");
+// exports.getAllUsers = async (req, res, next) => {
+//   try {
+//     const users = await User.find({ isActive: true }).select("-__v");
 
-    res.status(200).json({
-      status: "success",
-      result: users.length,
-      data: {
-        users,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(200).json({
+//       status: "success",
+//       result: users.length,
+//       data: {
+//         users,
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const filterObj = (obj, ...allowedField) => {
   let newObj = {};
@@ -64,5 +64,6 @@ exports.UpdateMe = async (req, res, next) => {
 };
 
 // two of this for admin operation
-exports.deleteUser = factory.deleteOne(User);
+exports.deleteUser = factory.deleteOneSoft(User);
 exports.updateUser = factory.UpdateOne(User);
+exports.getAllUsers = factory.getAll(User);
