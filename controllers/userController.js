@@ -1,22 +1,35 @@
+const multer = require("multer");
 const createError = require("http-errors");
 const User = require("../models/userModal");
 const factory = require("../controllers/hanlderFactory");
 
-// exports.getAllUsers = async (req, res, next) => {
-//   try {
-//     const users = await User.find({ isActive: true }).select("-__v");
+const multerStorage = multer.diskStorage({  
+  destination: (req, file, cb) => {  // store in file system of the project
+    cb(null, "public/img/users");
+  },
+  filename: (req, file, cb) => {  // give a file some unique file name
+    const ext = file.mimetype.split("/")[1];
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`); // user-1219201321ba-2323234.jpeg
+  },
+});
 
-//     res.status(200).json({
-//       status: "success",
-//       result: users.length,
-//       data: {
-//         users,
-//       },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const multerFilter = (req, file, cb) => { // test if uploaded file is an image
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(
+      createError.BadRequest("Not an image! Please upload only images"),
+      false
+    );
+  }
+};
+
+const upload = multer({
+  storage: multerStorage, 
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserAvatar = upload.single("avatar");
 
 const filterObj = (obj, ...allowedField) => {
   let newObj = {};
@@ -35,22 +48,27 @@ exports.UpdateMe = async (req, res, next) => {
       throw createError.BadRequest("This route is not for password updates");
     }
 
-    const filteredBody = filterObj(
+    let filteredBody = filterObj(
       req.body,
       "name",
       "email",
       "birthdate",
       "avatar"
     );
+    if(req.file) filteredBody.avatar = req.file.filename;
     // update user
     const updatedUser = await User.findByIdAndUpdate(
-      req.body.id,
+      req.user._id,
       filteredBody,
       {
         new: true,
         runValidators: true,
       }
     );
+
+    if(!updatedUser) {
+      throw createError.NotFound('Can Not Find User With That ID')
+    }
 
     res.status(200).json({
       status: "success",

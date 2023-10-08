@@ -25,14 +25,14 @@ const userSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: true,
-    select: false
+    select: false,
   },
   role: {
     type: String,
     default: "user",
     enum: ["admin", "user", "staff", "lecturer"],
   },
-  avatar: String,
+  avatar: { type: String, default: "default.jpg" },
   birthdate: {
     type: Date,
     validate: {
