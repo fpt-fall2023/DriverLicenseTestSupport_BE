@@ -17,10 +17,16 @@ const questionSchema = new mongoose.Schema({
     required: [true, "Question Must Have At Least One Answer"],
   },
   category: {
-    type: String,
-    required: [true, "category is not allow empty"],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "QuestionType",
+    required: [true, "Category is required"]
   },
 });
+
+questionSchema.pre(/^find/, function (next) {
+  this.populate({ path: 'category', select: '-__v'});
+  next();
+}); 
 
 const Question = mongoose.model("Question", questionSchema);
 

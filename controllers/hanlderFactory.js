@@ -64,7 +64,7 @@ exports.getAll = (Model, filterOptions) => async (req, res, next) => {
       .filter()
       .sort()
       .limitFields()
-      .paginate();
+      // .paginate();
     const doc = await features.mongooseQuery;
 
     const modelName = Model.modelName;
