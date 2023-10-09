@@ -3,15 +3,16 @@ const morgan = require("morgan");
 const userRoute = require("./routes/userRouter");
 const createError = require("http-errors");
 const questionRoute = require("./routes/questionRouter");
-const compression = require('compression')
-const cors = require('cors')
+const questionCategoryRoute = require("./routes/questionCategoryRouter");
+const compression = require("compression");
+const cors = require("cors");
 
 const app = express();
 
 // 1) Global Middleware
 // Implement CORS
 app.use(cors()); // Access-Control-Allow-Origin *
-app.options('*', cors());
+app.options("*", cors());
 // Logging
 app.use(morgan("dev"));
 
@@ -20,6 +21,7 @@ app.use(express.json());
 // 2) Router
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/questions", questionRoute);
+app.use("/api/v1/questions-category", questionCategoryRoute);
 
 // 3) Global Error Handling
 app.use((req, res, next) => {

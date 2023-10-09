@@ -16,6 +16,10 @@ const questionSchema = new mongoose.Schema({
     type: Array,
     required: [true, "Question Must Have At Least One Answer"],
   },
+  category: {
+    type: String,
+    required: [true, "category is not allow empty"],
+  },
 });
 
 const Question = mongoose.model("Question", questionSchema);

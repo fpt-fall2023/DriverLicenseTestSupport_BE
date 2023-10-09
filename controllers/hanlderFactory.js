@@ -54,11 +54,11 @@ exports.UpdateOne = (Model) => async (req, res, next) => {
   }
 };
 
-exports.getAll = (Model) => async (req, res, next) => {
+exports.getAll = (Model, filterOptions) => async (req, res, next) => {
   try {
-    // Allow for nested GET reviews on tour
     let filter = {};
     if (req.params.tourId) filter = { tour: req.params.tourId };
+    if (filterOptions) filter = filterOptions;
 
     const features = new APIfeatures(Model.find(filter), req.query)
       .filter()
@@ -71,6 +71,28 @@ exports.getAll = (Model) => async (req, res, next) => {
     res.status(200).json({
       status: "success",
       results: doc.length,
+      data: {
+        [modelName]: doc,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createOne = (Model, allowedFields) => async (req, res, next) => {
+  try {
+    let data = {};
+    Object.keys(req.body).forEach((item) => {
+      if (allowedFields.includes(item)) {
+        data[item] = req.body[item];
+      }
+    });
+
+    const doc = await Model.create(data);
+    const modelName = Model.modelName;
+    res.status(201).json({
+      status: "success",
       data: {
         [modelName]: doc,
       },

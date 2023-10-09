@@ -84,4 +84,4 @@ exports.UpdateMe = async (req, res, next) => {
 // two of this for admin operation
 exports.deleteUser = factory.deleteOneSoft(User);
 exports.updateUser = factory.UpdateOne(User);
-exports.getAllUsers = factory.getAll(User);
+exports.getAllUsers = factory.getAll(User, { isActive: true });
