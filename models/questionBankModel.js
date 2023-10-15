@@ -12,6 +12,11 @@ const questionBankSchema = new mongoose.Schema({
         required: [true, 'Question is not allowed empty'],
     }
   ],
+  driveType: {
+    type: String,
+    enum: ["B1", "B2"],
+    required: [true, 'test type is not allowed empty'],
+    },
   createdAt: {
     type: Date,
     default: Date.now(),

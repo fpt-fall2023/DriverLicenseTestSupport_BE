@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const APIfeatures = require("../utils/apiFeatures");
+const { create } = require("../models/questionBankModel");
 
 exports.deleteOneSoft = (Model) => async (req, res, next) => {
   try {
@@ -101,3 +102,24 @@ exports.createOne = (Model, allowedFields) => async (req, res, next) => {
     next(error);
   }
 };
+
+exports.findOne = (Model) => async (req, res, next) => {
+  try {
+    const id = req.params.id;
+
+    const doc = await Model.findById(id);
+
+    if(!doc) {
+      throw createError.NotFound('Can not find document with that id');
+    }
+
+    const modelName = Model.modelName;
+    res.status(200).json({
+      status: 'success',
+      [modelName]: doc,
+    })
+    
+  } catch (error) {
+    next(error)
+  }
+}
