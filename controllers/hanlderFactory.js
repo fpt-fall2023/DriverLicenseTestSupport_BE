@@ -70,7 +70,7 @@ exports.getAll = (Model, filterOptions) => async (req, res, next) => {
     const modelName = Model.modelName;
     res.status(200).json({
       status: "success",
-      results: doc.length,
+      results: doc.length, 
       data: {
         [modelName]: doc,
       },

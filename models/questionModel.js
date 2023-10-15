@@ -7,6 +7,10 @@ const questionSchema = new mongoose.Schema({
     required: [true, "Queston Name Is Not Allow Empty"],
     trim: true,
   },
+  isDanger: {
+    type: Boolean,
+    default: false
+  },
   answers: {
     type: Array,
     required: [true, "Question Must Have At Least One Answer"],
