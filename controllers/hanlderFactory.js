@@ -63,8 +63,8 @@ exports.getAll = (Model, filterOptions) => async (req, res, next) => {
     const features = new APIfeatures(Model.find(filter), req.query)
       .filter()
       .sort()
-      .limitFields()
-      // .paginate();
+      .limitFields();
+    // .paginate();
     const doc = await features.mongooseQuery;
 
     const modelName = Model.modelName;
@@ -84,12 +84,12 @@ exports.createOne = (Model, allowedFields) => async (req, res, next) => {
   try {
     let data = {};
     Object.keys(req.body).forEach((item) => {
-      if (allowedFields.includes(item)) {
+      if (allowedFields?.includes(item)) {
         data[item] = req.body[item];
       }
     });
 
-    const doc = await Model.create(data);
+    const doc = await Model.create(Object.keys(data).length > 0 ? data : req.body);
     const modelName = Model.modelName;
     res.status(201).json({
       status: "success",

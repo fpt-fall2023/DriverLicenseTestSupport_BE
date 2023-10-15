@@ -4,6 +4,8 @@ const userRoute = require("./routes/userRouter");
 const createError = require("http-errors");
 const questionRoute = require("./routes/questionRouter");
 const questionCategoryRoute = require("./routes/questionCategoryRouter");
+const trafficSignCategoryRoute = require('./routes/trafficSignCategoryRouter');
+const trafficSignRoute = require('./routes/trafficSignRouter')
 const compression = require("compression");
 const cors = require("cors");
 
@@ -17,11 +19,14 @@ app.options("*", cors());
 app.use(morgan("dev"));
 
 app.use(express.json());
+app.use(compression())
 
 // 2) Router
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/questions", questionRoute);
 app.use("/api/v1/questions-category", questionCategoryRoute);
+app.use("/api/v1/traffic-sign", trafficSignRoute)
+app.use("/api/v1/traffic-sign-category", trafficSignCategoryRoute)
 
 // 3) Global Error Handling
 app.use((req, res, next) => {

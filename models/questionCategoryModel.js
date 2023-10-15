@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const questionTypeSchema = new mongoose.Schema({
-  category: {
+  questionType: {
     type: String,
     trim: true,
     required: [true, "Type must be required"],
