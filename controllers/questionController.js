@@ -1,5 +1,5 @@
-const factory = require("../controllers/hanlderFactory");
-const Question = require("../models/questionModel");
+const factory = require('../controllers/hanlderFactory');
+const Question = require('../models/questionModel');
 
 exports.getAllQuestion = factory.getAll(Question);
 exports.deleteQuestion = factory.deleteOne(Question);

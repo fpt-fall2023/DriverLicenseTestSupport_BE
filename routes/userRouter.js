@@ -12,7 +12,7 @@ router.use(authController.protectRoute);
 
 router.use(authController.grantAccess("admin"));
 
-router.route("/").get(userController.getAllUsers);
+router.route("/").get(userController.getAllUsers).post(userController.createUser);
 
 router
   .route("/:id")

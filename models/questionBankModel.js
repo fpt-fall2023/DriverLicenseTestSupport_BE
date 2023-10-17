@@ -15,8 +15,8 @@ const questionBankSchema = new mongoose.Schema({
   driveType: {
     type: String,
     enum: ["B1", "B2"],
-    required: [true, 'test type is not allowed empty'],
-    },
+    required: [true, 'drive type is not allowed empty'],
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
