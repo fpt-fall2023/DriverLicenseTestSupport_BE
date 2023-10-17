@@ -85,3 +85,4 @@ exports.UpdateMe = async (req, res, next) => {
 exports.deleteUser = factory.deleteOneSoft(User);
 exports.updateUser = factory.UpdateOne(User);
 exports.getAllUsers = factory.getAll(User, { isActive: true });
+exports.createUser = factory.createOne(User);
