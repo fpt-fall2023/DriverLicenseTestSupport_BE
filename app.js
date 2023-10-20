@@ -9,6 +9,7 @@ const questionBankRoute = require('./routes/questionBankRouter');
 const trafficSignRoute = require('./routes/trafficSignRouter')
 const samepleTestRoute = require('./routes/sampleTestRouter')
 const testResultRoute = require('./routes/testResultRouter')
+const courseRoute = require('./routes/courseRouter');
 const compression = require("compression");
 const cors = require("cors");
 
@@ -33,6 +34,7 @@ app.use("/api/v1/traffic-sign-category", trafficSignCategoryRoute)
 app.use("/api/v1/questions-bank", questionBankRoute)
 app.use("/api/v1/sample-test", samepleTestRoute)
 app.use("/api/v1/test-result", testResultRoute)
+app.use("/api/v1/courses", courseRoute)
 
 // 3) Global Error Handling
 app.use((req, res, next) => {
