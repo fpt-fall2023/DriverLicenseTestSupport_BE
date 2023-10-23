@@ -6,4 +6,5 @@ exports.saveTestResult = factory.createOne(testResultModel);
 exports.deleteTestResult = factory.deleteOne(testResultModel);
 exports.updateTestResult = factory.UpdateOne(testResultModel);
 exports.getTestResult = factory.findOne(testResultModel);
+exports.getAllTestResult = factory.getAll(testResultModel);
 

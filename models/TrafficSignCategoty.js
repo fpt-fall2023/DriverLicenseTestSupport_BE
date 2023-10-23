@@ -5,6 +5,7 @@ const TrafficSignCategorySchema = new mongoose.Schema({
     type: String,
     unique: true,
     trim: true,
+    require: [true, 'not allowed empty']
   },
 });
 
