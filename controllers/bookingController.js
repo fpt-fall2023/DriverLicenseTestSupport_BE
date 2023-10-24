@@ -2,9 +2,9 @@ const factory = require('./hanlderFactory');
 const Booking = require('../models/bookingModel');
 const Slot = require('../models/slotModel');
 const User = require('../models/userModal');
+const Car = require('../models/carModel');
 const { getCurrentTime } = require('../utils/utilities');
 const createError = require('http-errors');
-const { all } = require('../routes/bookingRouter');
 
 exports.getAllBooking = factory.getAll(Booking);
 exports.updateBooking = factory.UpdateOne(Booking);
@@ -12,6 +12,7 @@ exports.deleteBooking = factory.deleteOne(Booking);
 
 exports.createBooking = async (req, res, next) => {
   try {
+    const data = req.body;
     const currentDate = new Date().toISOString().split('T')[0];
     let booking = Booking.find({
       date: req.body.date,
@@ -46,19 +47,49 @@ exports.createBooking = async (req, res, next) => {
       })
       .clone();
 
-    if (bookedCourseByUser === 5) {
+    if (bookedCourseByUser === slot.length) {
       throw createError.BadRequest(
         'Một ngày học sinh chỉ được học tối đa 10 tiếng'
       );
     }
 
-    const bookingCourse = await Booking.create({
-      user: req.body.user,
-      teacher: req.body.teacher,
-      course: req.body.course,
+    // 5. Tự động assign ô tô còn active trong hệ thống
+    const bookedTeacherWithCar = await Booking.find({
       date: req.body.date,
-      timeStart: req.body.timeStart
+      teacher: req.body.teacher
     });
+
+    // const availableCar = await Car.find({})
+
+    // nếu một booking đã có giáo viên thì chỉ cần lấy id của car đó gán cho tất cả booking trong ngày
+    if (bookedTeacherWithCar.length !== 0) {
+      data.car = bookedTeacherWithCar[0].car._id.toString();
+    }
+
+    // trường hợp chưa có giáo viên nào được book cùng với car
+    if (bookedTeacherWithCar.length === 0) {
+      const allCar = await Car.find();
+      // lấy ra tất cả ô tô đi cùng với giáo viên trong một ngày
+      const countCar = await Booking.aggregate([
+        {
+          $match: { date: { $eq: req.body.date } }
+        }
+      ]);
+      const bookedCar = new Set(countCar.map(item => item.car._id.toString()));
+
+      const availableCar = [];
+
+      allCar.forEach(car => {
+        if (![...Array.from(bookedCar)].includes(car._id.toString())) {
+          availableCar.push(car);
+        }
+      });
+
+      // console.log(availableCar);
+      data.car = availableCar[0]._id.toString();
+    }
+
+    const bookingCourse = await Booking.create(data);
 
     res.status(201).json({
       status: 'success',
@@ -130,11 +161,12 @@ exports.getAvailableTeacher = async (req, res, next) => {
       // trường hợp những giáo viên chưa được booking
       allTeacher.forEach((item, index) => {
         if (
-          !bookedStats.map(item => item._id.toString()).includes(item._id.toString())
+          !bookedStats
+            .map(item => item._id.toString())
+            .includes(item._id.toString())
         ) {
           teachers.push(item);
         }
-
 
         if (bookedStats[index]?.numSlots < allSlot.length) {
           teachers.push(item);

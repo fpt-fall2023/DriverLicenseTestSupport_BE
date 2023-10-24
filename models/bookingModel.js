@@ -17,6 +17,10 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Course',
     required: [true, 'course is required']
   },
+  car: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Car'
+  },
   date: {
     type: String,
     required: [true, 'date is required'],
@@ -46,7 +50,7 @@ const bookingSchema = new mongoose.Schema({
 bookingSchema.pre(/^find/, function(next) {
   this.populate({ path: 'user', select: 'name email' })
     .populate({ path: 'teacher', select: 'name email avatar' })
-    .populate({ path: 'course' });
+    .populate({ path: 'course' }).populate('car');
   next();
 });
 

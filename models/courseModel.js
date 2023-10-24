@@ -7,6 +7,14 @@ const courseSchema = new mongoose.Schema({
         unique: true
     },
     description: String,
+    startDate: {
+        type: Date,
+        required: [true, 'start date is required']
+    },
+    endDate: {
+        type: Date,
+        required: [true, 'end date is required']
+    },
     createdAt: {
         type: Date,
         default: Date.now

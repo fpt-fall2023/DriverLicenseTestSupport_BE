@@ -8,7 +8,7 @@ router.route('/')
     .post(sampleTestController.createSampleTest)
 
 router.route('/:id')
-    .get(sampleTestController.deleteSampleTest)
+    .delete(sampleTestController.deleteSampleTest)
     .patch(sampleTestController.updateSampleTest);
 
 module.exports = router

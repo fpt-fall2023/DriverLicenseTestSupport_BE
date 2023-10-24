@@ -94,6 +94,7 @@ exports.createOne = (Model, allowedFields) => async (req, res, next) => {
     const modelName = Model.modelName;
     res.status(201).json({
       status: "success",
+      statusCode: 201,
       data: {
         [modelName]: doc,
       },
