@@ -12,6 +12,8 @@ const testResultRoute = require('./routes/testResultRouter')
 const courseRoute = require('./routes/courseRouter');
 const slotRoute  = require('./routes/slotRouter');
 const bookingRoute = require('./routes/bookingRouter');
+const paymentRoute = require('./routes/paymentRouter');
+const carRoute = require('./routes/carRouter');
 const compression = require("compression");
 const cors = require("cors");
 
@@ -43,6 +45,10 @@ app.use("/api/v1/test-result", testResultRoute)
 app.use("/api/v1/courses", courseRoute)
 app.use("/api/v1/slot", slotRoute)
 app.use("/api/v1/booking", bookingRoute)
+app.use("/api/v1/car", carRoute)
+
+// --- module payment
+app.use("/api/v1/payment", paymentRoute)
 
 // 3) Global Error Handling
 app.use((req, res, next) => {
