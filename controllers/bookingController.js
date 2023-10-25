@@ -64,7 +64,7 @@ exports.createBooking = async (req, res, next) => {
       data.car = bookedTeacherWithCar[0].car._id.toString();
     }
 
-    // trường hợp chưa có giáo viên nào được book cùng với car
+    // trường hợp chưa có giáo viên nào được book cùng với ô tô 
     if (bookedTeacherWithCar.length === 0) {
       const allCar = await Car.find();
       // lấy ra tất cả ô tô đi cùng với giáo viên trong một ngày

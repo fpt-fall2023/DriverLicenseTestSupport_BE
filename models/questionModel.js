@@ -15,12 +15,7 @@ const questionSchema = new mongoose.Schema({
     type: Array,
     required: [true, "Question Must Have At Least One Answer"],
   },
-  questionImage: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "TrafficSign",
-    },
-  ],
+  questionImage: String,
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "QuestionType",
