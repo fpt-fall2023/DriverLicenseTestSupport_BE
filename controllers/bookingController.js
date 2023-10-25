@@ -59,9 +59,7 @@ exports.createBooking = async (req, res, next) => {
       teacher: req.body.teacher
     });
 
-    // const availableCar = await Car.find({})
-
-    // nếu một booking đã có giáo viên thì chỉ cần lấy id của car đó gán cho tất cả booking trong ngày
+    // nếu một booking đã có giáo viên thì chỉ cần lấy id car thuộc giáo viên đó gán cho tất cả booking của giáo viên trong ngày
     if (bookedTeacherWithCar.length !== 0) {
       data.car = bookedTeacherWithCar[0].car._id.toString();
     }
@@ -75,17 +73,19 @@ exports.createBooking = async (req, res, next) => {
           $match: { date: { $eq: req.body.date } }
         }
       ]);
+
       const bookedCar = new Set(countCar.map(item => item.car._id.toString()));
 
       const availableCar = [];
 
       allCar.forEach(car => {
         if (![...Array.from(bookedCar)].includes(car._id.toString())) {
-          availableCar.push(car);
+          if (car.status === 'available') {
+            availableCar.push(car);
+          }
         }
       });
 
-      // console.log(availableCar);
       data.car = availableCar[0]._id.toString();
     }
 
@@ -158,20 +158,26 @@ exports.getAvailableTeacher = async (req, res, next) => {
     }
 
     if (bookedStats.length !== 0) {
-      // trường hợp những giáo viên chưa được booking
-      allTeacher.forEach((item, index) => {
+      for (let i = 0; i < allTeacher.length; i++) {
+        // trường hợp những giáo viên chưa được booking
         if (
           !bookedStats
-            .map(item => item._id.toString())
-            .includes(item._id.toString())
+            .map(bookedStat => bookedStat._id.toString())
+            .includes(allTeacher[i]._id.toString())
         ) {
-          teachers.push(item);
+          teachers.push(allTeacher[i]);
         }
 
-        if (bookedStats[index]?.numSlots < allSlot.length) {
-          teachers.push(item);
+        // trường hợp những giáo viên còn trống slot chưa book
+        if (
+          bookedStats[i] ? bookedStats[i]?.numSlots < allSlot.length : false
+        ) {
+          const teacher = await User.find({
+            _id: bookedStats[i]._id.toString()
+          });
+          teachers.push(teacher[0]);
         }
-      });
+      }
     }
 
     res.status(200).json({
