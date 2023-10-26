@@ -8,10 +8,11 @@ router.use(authController.protectRoute);
 
 router.route('/available-slot/:id').get(bookingController.getAvailableSlot);
 router.route('/available-teacher').get(bookingController.getAvailableTeacher);
+router.route('/change-booking-schedule').patch(bookingController.changeBookingSchedule)
 
 router.route('/')
-    .get( bookingController.getAllBooking) 
-    .post(bookingController.createBooking);
+    .get(bookingController.getAllBooking) 
+    .post(authController.grantAccess('user'), bookingController.createBooking);
 
 router.route('/:id')
     .delete(authController.grantAccess('admin'), bookingController.deleteBooking)

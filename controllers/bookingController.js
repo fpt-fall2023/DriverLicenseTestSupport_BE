@@ -64,7 +64,7 @@ exports.createBooking = async (req, res, next) => {
       data.car = bookedTeacherWithCar[0].car._id.toString();
     }
 
-    // trường hợp chưa có giáo viên nào được book cùng với ô tô 
+    // trường hợp chưa có giáo viên nào được book cùng với ô tô
     if (bookedTeacherWithCar.length === 0) {
       const allCar = await Car.find();
       // lấy ra tất cả ô tô đi cùng với giáo viên trong một ngày
@@ -184,6 +184,25 @@ exports.getAvailableTeacher = async (req, res, next) => {
       status: 'success',
       teachers
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.changeBookingSchedule = async (req, res, next) => {
+  try {
+    const numBookedByDate = await Booking.find({ date: req.body.dateAbsent });
+
+    //! trường hợp ngày đó chưa có ai book trong ngày
+    if (!numBookedByDate.length) {
+      console.log('vcl');
+    }
+
+    //! trường hợp đã có học sinh book giáo viên trong ngày
+    if (numBookedByDate.length) {
+      console.log('co book roi a');
+    }
+    
   } catch (error) {
     next(error);
   }
