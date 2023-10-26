@@ -24,9 +24,11 @@ exports.getQuestionBank = async (req, res, next) => {
             const randomAns = shuffleData(item.answers);
             return {
                 questionName: item.questionName,
+                questionImage: item.questionImage,
                 isDanger: item.isDanger,
                 answers: randomAns,
-                category: item.category
+                category: item.category,
+                driveType: item.driveType
             }
         })
 
