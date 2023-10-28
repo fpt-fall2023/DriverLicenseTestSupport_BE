@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.post("/register", authController.signUp);
 router.post("/signin", authController.signIn);
-router.patch('/updateMe', authController.protectRoute, userController.UpdateMe)
+router.patch('/updateMe', authController.protectRoute, userController.UpdateMe);
+router.get('/get-me/:id', userController.findUser);
 
 router.use(authController.protectRoute);
 
