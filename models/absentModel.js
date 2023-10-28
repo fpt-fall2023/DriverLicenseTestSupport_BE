@@ -26,6 +26,10 @@ const AbsentSchema = new mongoose.Schema({
   isAccepted: {
     type: Boolean,
     default: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now()
   }
 });
 

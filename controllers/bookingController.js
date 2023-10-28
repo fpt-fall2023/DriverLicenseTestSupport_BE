@@ -2,6 +2,7 @@ const factory = require('./hanlderFactory');
 const Booking = require('../models/bookingModel');
 const Slot = require('../models/slotModel');
 const User = require('../models/userModal');
+const Absent = require('../models/absentModel');
 const Car = require('../models/carModel');
 const { getCurrentTime } = require('../utils/utilities');
 const createError = require('http-errors');
@@ -29,7 +30,7 @@ exports.createBooking = async (req, res, next) => {
 
     // 2. chặn user booking lịch trong quá khứ
     if (req.body.date < currentDate) {
-      throw createError.BadRequest('Date is not valid');
+      throw createError.BadRequest('User can not booking the date in the past');
     }
 
     // 3. chặn user tạo booking trùng giờ trong ngày
@@ -67,24 +68,29 @@ exports.createBooking = async (req, res, next) => {
     // trường hợp chưa có giáo viên nào được book cùng với ô tô
     if (bookedTeacherWithCar.length === 0) {
       const allCar = await Car.find();
-      // lấy ra tất cả ô tô đi cùng với giáo viên trong một ngày
+      //! lấy ra tất cả ô tô đi cùng với giáo viên trong một ngày
       const countCar = await Booking.aggregate([
         {
           $match: { date: { $eq: req.body.date } }
         }
       ]);
 
-      const bookedCar = new Set(countCar.map(item => item.car._id.toString()));
+      let availableCar = [];
+      if (countCar.length > 0) {
+        const bookedCar = new Set(
+          countCar.map(item => item.car._id.toString())
+        );
 
-      const availableCar = [];
-
-      allCar.forEach(car => {
-        if (![...Array.from(bookedCar)].includes(car._id.toString())) {
-          if (car.status === 'available') {
-            availableCar.push(car);
+        allCar.forEach(car => {
+          if (![...Array.from(bookedCar)].includes(car._id.toString())) {
+            if (car.status === 'available') {
+              availableCar.push(car);
+            }
           }
-        }
-      });
+        });
+      } else {
+        availableCar = [...allCar];
+      }
 
       data.car = availableCar[0]._id.toString();
     }
@@ -137,6 +143,10 @@ exports.getAvailableTeacher = async (req, res, next) => {
     const currentDate = req.query.date;
     const allSlot = await Slot.find();
     const allTeacher = await User.find({ role: 'teacher' });
+    const absentTeacher = await Absent.find({
+      dateAbsent: currentDate,
+      isAccepted: true
+    });
 
     // nhóm những giáo viên đã được book và số lượng slot
     const bookedStats = await Booking.aggregate([
@@ -180,9 +190,20 @@ exports.getAvailableTeacher = async (req, res, next) => {
       }
     }
 
+    //! trừ ra những giáo viên vắng trong ngày
+    let availableTeacher = [];
+    if (absentTeacher.length > 0) {
+      availableTeacher = allTeacher.filter(
+        teacher =>
+          teacher._id.toString() !== absentTeacher[0].teacher._id.toString()
+      );
+    } else {
+      availableTeacher = [...allTeacher];
+    }
+
     res.status(200).json({
       status: 'success',
-      teachers
+      availableTeacher
     });
   } catch (error) {
     next(error);
@@ -193,16 +214,11 @@ exports.changeBookingSchedule = async (req, res, next) => {
   try {
     const numBookedByDate = await Booking.find({ date: req.body.dateAbsent });
 
-    //! trường hợp ngày đó chưa có ai book trong ngày
-    if (!numBookedByDate.length) {
-      console.log('vcl');
-    }
-
     //! trường hợp đã có học sinh book giáo viên trong ngày
+    //! dời lịch cho học sinh
     if (numBookedByDate.length) {
       console.log('co book roi a');
     }
-    
   } catch (error) {
     next(error);
   }
