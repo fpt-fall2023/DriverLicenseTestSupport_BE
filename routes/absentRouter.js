@@ -13,6 +13,13 @@ router
   );
 
 router
+  .route('/reject-absent/:id')
+  .patch(
+    // authController.grantAccess('admin', 'staff'), 
+    absentController.rejectAbsent
+  );
+
+router
   .route('/')
   .get(
     // authController.grantAccess('staff', 'admin'),

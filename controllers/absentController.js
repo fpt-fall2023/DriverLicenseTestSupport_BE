@@ -25,7 +25,7 @@ exports.requestAbsent = async (req, res, next) => {
     }
 
     //! phải tạo request absent trước 2 ngày
-    currentDate.setDate(currentDate.getDate() + 2);
+    currentDate.setDate(currentDate.getDate() + 2); // plus two more days from now
     const requestDate = new Date(req.body.dateAbsent);
     if (requestDate < currentDate) {
       throw createError.BadRequest(
@@ -54,7 +54,7 @@ exports.aprroveAbsent = async (req, res, next) => {
 
     const approvedAbsent = await AbsentModel.findByIdAndUpdate(
       id,
-      { isAccepted: true },
+      { status: "approved" },
       {
         new: true
       }
@@ -63,6 +63,27 @@ exports.aprroveAbsent = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       approvedAbsent
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.rejectAbsent = async (req, res, next) => {
+  try {
+    const absenceID = req.params.id;
+
+    const rejectedAbsent = await AbsentModel.findByIdAndUpdate(
+      absenceID,
+      { status: "rejected" },
+      {
+        new: true
+      }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      rejectedAbsent
     });
   } catch (error) {
     next(error);
