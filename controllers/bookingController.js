@@ -11,6 +11,21 @@ exports.getAllBooking = factory.getAll(Booking);
 exports.updateBooking = factory.UpdateOne(Booking);
 exports.deleteBooking = factory.deleteOne(Booking);
 
+exports.updateBooking = async (req, res, next) => {
+  try {
+
+    //! 1. Gửi request cho user xem có chấp nhận lịch học đó không
+    
+
+    //! 2. Nếu user chấp nhận lịch thì sẽ cập nhật qua chủ nhật 
+
+    //! 3. Nếu user không chấp nhận thì 
+
+  } catch (error) {
+    next(error)
+  }
+}
+
 exports.createBooking = async (req, res, next) => {
   try {
     const data = req.body;
