@@ -10,21 +10,8 @@ const createError = require('http-errors');
 exports.getAllBooking = factory.getAll(Booking);
 exports.updateBooking = factory.UpdateOne(Booking);
 exports.deleteBooking = factory.deleteOne(Booking);
+exports.updateBooking = factory.UpdateOne(Booking);
 
-exports.updateBooking = async (req, res, next) => {
-  try {
-
-    //! 1. Gửi request cho user xem có chấp nhận lịch học đó không
-    
-
-    //! 2. Nếu user chấp nhận lịch thì sẽ cập nhật qua chủ nhật 
-
-    //! 3. Nếu user không chấp nhận thì 
-
-  } catch (error) {
-    next(error)
-  }
-}
 
 exports.createBooking = async (req, res, next) => {
   try {
@@ -160,7 +147,7 @@ exports.getAvailableTeacher = async (req, res, next) => {
     const allTeacher = await User.find({ role: 'teacher' });
     const absentTeacher = await Absent.find({
       dateAbsent: currentDate,
-      isAccepted: true
+      status: "approved"
     });
 
     // nhóm những giáo viên đã được book và số lượng slot
@@ -184,7 +171,7 @@ exports.getAvailableTeacher = async (req, res, next) => {
 
     if (bookedStats.length !== 0) {
       for (let i = 0; i < allTeacher.length; i++) {
-        // trường hợp những giáo viên chưa được booking
+        // trường hợp những giáo viên chưa được book
         if (
           !bookedStats
             .map(bookedStat => bookedStat._id.toString())
