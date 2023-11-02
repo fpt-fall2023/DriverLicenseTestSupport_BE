@@ -15,6 +15,7 @@ const bookingRoute = require('./routes/bookingRouter');
 const paymentRoute = require('./routes/paymentRouter');
 const carRoute = require('./routes/carRouter');
 const absentRoute = require('./routes/absentRouter');
+const changeScheduleRoute = require('./routes/scheduleChangeNoticeRouter');
 const compression = require('compression');
 const cors = require('cors');
 
@@ -53,6 +54,9 @@ app.use('/api/v1/payment', paymentRoute);
 
 // --- module absent
 app.use('/api/v1/absent', absentRoute);
+
+// --- module change schedule --
+app.use('/api/v1/schedule', changeScheduleRoute)
 
 // 3) Global Error Handling
 app.use((req, res, next) => {
