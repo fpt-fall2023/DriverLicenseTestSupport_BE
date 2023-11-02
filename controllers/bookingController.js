@@ -119,8 +119,8 @@ exports.getAvailableSlot = async (req, res, next) => {
     ).map(item => item.timeStart);
 
     // 1. lọc bỏ slot có thời gian nhỏ hơn thời gian hiện tại
-    // const currentTime = getCurrentTime();
-    const currentTime = '06:00';
+    const currentTime = getCurrentTime();
+    // const currentTime = '06:00';
     const remainSlot =
       reqDate === currentDate
         ? allSlot.filter(slot => slot.time > currentTime)
