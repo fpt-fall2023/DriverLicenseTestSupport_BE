@@ -18,7 +18,8 @@ const validateSignUp = (data) => {
       }),
     role: Joi.string().optional().default('user'),
     avatar: Joi.string().optional(),
-    birthdate: Joi.string().optional()
+    birthdate: Joi.string().optional(),
+    phone: Joi.string().optional()
   });
   return userSchema.validate(data);
 };
