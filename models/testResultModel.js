@@ -35,7 +35,7 @@ testResultSchema.virtual("isPass").get(function () {
 testResultSchema.pre(/^find/, function(next) {
     this
     .populate('userId')
-    .populate('testId')
+    .populate('sampleTestId')
     next()
 })
 
