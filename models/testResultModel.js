@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const testResultSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.ObjectId,
+        ref: 'User',
         required: [true, 'User ID is required']
     },
-    testId: {
+    sampleTestId: {
         type: mongoose.Schema.ObjectId,
+        ref: 'SampleTest',
         required: [true, 'Test ID is required']
     },
     numRightQuestion: {
@@ -28,6 +30,13 @@ const testResultSchema = new mongoose.Schema({
 
 testResultSchema.virtual("isPass").get(function () {
     return this.numRightQuestion > 30
+})
+
+testResultSchema.pre(/^find/, function(next) {
+    this
+    .populate('userId')
+    .populate('testId')
+    next()
 })
 
 const TestResult = mongoose.model('TestResult', testResultSchema);

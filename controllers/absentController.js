@@ -51,6 +51,8 @@ exports.requestAbsent = async (req, res, next) => {
 exports.aprroveAbsent = async (req, res, next) => {
   try {
     const id = req.params.id;
+    // const {date, teacherId} = req.query;
+
 
     // 1! update status of absent
     const approvedAbsent = await AbsentModel.findByIdAndUpdate(
@@ -61,7 +63,10 @@ exports.aprroveAbsent = async (req, res, next) => {
       }
     );
 
-    // 2! if have booking in the date teacher request, then delete in database
+    // 2! if have booking in the date teacher request absent, then delete the booking in database
+    // if(approvedAbsent) {
+      
+    // }
 
     res.status(200).json({
       status: 'success',
