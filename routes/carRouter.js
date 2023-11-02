@@ -13,7 +13,7 @@ router
 
 router
   .route('/:id')
-  .delete(carController.createCar)
+  .delete(carController.deleteCar)
   .patch(carController.updateCar);
 
 module.exports = router;
