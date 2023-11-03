@@ -12,7 +12,7 @@ router.route('/')
 
 router.route('/:id')
     .get(testResultController.getTestResult)
-    .delete(authController.grantAccess('amdin'), testResultController.deleteTestResult)
-    .patch(authController.grantAccess('amdin'), testResultController.updateTestResult)
+    .delete(authController.grantAccess('amdin', 'staff'), testResultController.deleteTestResult)
+    .patch(authController.grantAccess('amdin', 'staff'), testResultController.updateTestResult)
 
 module.exports = router;

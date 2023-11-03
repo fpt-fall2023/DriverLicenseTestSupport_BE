@@ -9,11 +9,11 @@ router.use(authController.protectRoute);
 router
 .route("/")
 .get(questionCategoryController.getAllCategory)
-.post(authController.grantAccess("admin"), questionCategoryController.createCategory);
+.post(authController.grantAccess("admin", "staff"), questionCategoryController.createCategory);
 
 router
   .route("/:id")
-  .delete(authController.grantAccess("admin"), questionCategoryController.deleteCategory)
-  .patch(authController.grantAccess("admin"), questionCategoryController.updateCategory);
+  .delete(authController.grantAccess("admin", "staff"), questionCategoryController.deleteCategory)
+  .patch(authController.grantAccess("admin", "staff"), questionCategoryController.updateCategory);
 
 module.exports = router;

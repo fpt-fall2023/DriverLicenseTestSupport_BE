@@ -6,16 +6,16 @@ const router = express.Router();
 
 router.use(authController.protectRoute);
 
-router.route('/get-change').get(scheduleChangeNoticeController.getAScheduleChangeNotice);
-router.route('/accept-change/:id').patch(scheduleChangeNoticeController.acceptScheduleChangeNotice);
-router.route('/deny-change/:id').patch(scheduleChangeNoticeController.denyScheduleChangeNotice);
+router.route('/get-change').get(authController.grantAccess("user"), scheduleChangeNoticeController.getAScheduleChangeNotice);
+router.route('/accept-change/:id').patch(authController.grantAccess("user"), scheduleChangeNoticeController.acceptScheduleChangeNotice);
+router.route('/deny-change/:id').patch(authController.grantAccess("user"), scheduleChangeNoticeController.denyScheduleChangeNotice);
 
 router.route('/')
-    .get(scheduleChangeNoticeController.findAllScheduleChangeNotice)
-    .post(scheduleChangeNoticeController.createScheduleChangeNotice);
+    .get(authController.grantAccess("admin", "staff"), scheduleChangeNoticeController.findAllScheduleChangeNotice)
+    .post(authController.grantAccess("admin", "staff"), scheduleChangeNoticeController.createScheduleChangeNotice);
 
 router.route('/:id')
-    .delete(scheduleChangeNoticeController.deleteScheduleChangeNotice)
+    .delete(authController.grantAccess("admin", "staff"), scheduleChangeNoticeController.deleteScheduleChangeNotice)
 
 
 module.exports = router

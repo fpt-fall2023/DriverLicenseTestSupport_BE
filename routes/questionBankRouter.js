@@ -7,12 +7,12 @@ const router = express.Router();
 router.use(authController.protectRoute);
 
 router.route('/')
-    .get(authController.grantAccess("admin"), questionBankController.getAllQuestionBank)
-    .post(authController.grantAccess("admin"), questionBankController.createQuestionBank);
+    .get(authController.grantAccess("admin", "staff"), questionBankController.getAllQuestionBank)
+    .post(authController.grantAccess("admin", "staff"), questionBankController.createQuestionBank);
 
 router.route('/:id')
     .get(questionBankController.getQuestionBank)
-    .delete(authController.grantAccess("admin"), questionBankController.deleteQuestionBank)
-    .patch(authController.grantAccess("admin"), questionBankController.updateQuestionBank)
+    .delete(authController.grantAccess("admin", "staff"), questionBankController.deleteQuestionBank)
+    .patch(authController.grantAccess("admin", "staff"), questionBankController.updateQuestionBank)
 
 module.exports = router;

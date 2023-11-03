@@ -8,21 +8,21 @@ router.use(authController.protectRoute);
 router
   .route('/approve-absent/:id')
   .patch(
-    // authController.grantAccess('admin', 'staff'), 
+    authController.grantAccess('admin', 'staff'), 
     absentController.aprroveAbsent
   );
 
 router
   .route('/reject-absent/:id')
   .patch(
-    // authController.grantAccess('admin', 'staff'), 
+    authController.grantAccess('admin', 'staff'), 
     absentController.rejectAbsent
   );
 
 router
   .route('/')
   .get(
-    // authController.grantAccess('staff', 'admin'),
+    authController.grantAccess('staff', 'admin'),
     absentController.getAllAbsent
   )
   .post(authController.grantAccess('teacher'), absentController.requestAbsent);
