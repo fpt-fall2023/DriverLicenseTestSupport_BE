@@ -49,7 +49,7 @@ const bookingSchema = new mongoose.Schema({
 
 bookingSchema.pre(/^find/, function(next) {
   this.populate({ path: 'user', select: 'name email phone' })
-    .populate({ path: 'teacher', select: 'name email avatar' })
+    .populate({ path: 'teacher', select: 'name email avatar phone' })
     .populate({ path: 'course', select: '-__v' }).populate({path: 'car', select: '-__v'});
   next();
 });
