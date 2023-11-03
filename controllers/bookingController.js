@@ -12,7 +12,6 @@ exports.updateBooking = factory.UpdateOne(Booking);
 exports.deleteBooking = factory.deleteOne(Booking);
 exports.updateBooking = factory.UpdateOne(Booking);
 
-
 exports.createBooking = async (req, res, next) => {
   try {
     const data = req.body;
@@ -27,28 +26,36 @@ exports.createBooking = async (req, res, next) => {
 
     // 1. chặn thời gian booking không hợp lệ
     if (!validTime.includes(req.body.timeStart)) {
-      throw createError.BadRequest('Time is not valid');
+      // throw createError.BadRequest('Time is not valid');
+      throw createError.BadRequest('Thời gian không hợp lệ');
     }
 
     // 2. chặn user booking lịch trong quá khứ
     if (req.body.date < currentDate) {
-      throw createError.BadRequest('User can not booking the date in the past');
+      // throw createError.BadRequest('User can not booking the date in the past');
+      throw createError.BadRequest('Bạn không thể đặt lịch trong quá khứ');
     }
 
     // 3. chặn user tạo booking trùng giờ trong ngày
-    const bookedCourse = await booking;
-    bookedCourse.forEach(course => {
+    const bookedCourseByDate = await booking;
+    bookedCourseByDate.forEach(course => {
       if (course.timeStart === req.body.timeStart) {
-        throw createError.BadRequest('This Course was booked by somebody else');
+        // throw createError.BadRequest('This Course was booked by somebody else');
+        throw createError.BadRequest('Thời gian này đã được đặt');
       }
     });
 
-    // 4. một user chỉ được học tối đa mười tiếng một ngày
-    const bookedCourseByUser = await booking
-      .countDocuments({
-        user: req.body.user
-      })
-      .clone();
+    // 3.1 chặn user book lịch cùng giờ trong ngày nhưng khác giáo viên
+    const bookedCourseByUser = await Booking.find({
+      user: req.body.user,
+      date: req.body.date
+    });
+    bookedCourseByUser.forEach(course => {
+      if (course.timeStart === req.body.timeStart) {
+        // throw createError.BadRequest('User have booked this time');
+        throw createError.BadRequest('Thời gian này đã được đặt');
+      }
+    });
 
     if (bookedCourseByUser === slot.length) {
       throw createError.BadRequest(
@@ -147,7 +154,7 @@ exports.getAvailableTeacher = async (req, res, next) => {
     const allTeacher = await User.find({ role: 'teacher' });
     const absentTeacher = await Absent.find({
       dateAbsent: currentDate,
-      status: "approved"
+      status: 'approved'
     });
 
     // nhóm những giáo viên đã được book và số lượng slot
