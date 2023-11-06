@@ -1,7 +1,7 @@
 const factory = require('./hanlderFactory');
 const Booking = require('../models/bookingModel');
 const Slot = require('../models/slotModel');
-const User = require('../models/userModal');
+const User = require('../models/userModel');
 const Absent = require('../models/absentModel');
 const Car = require('../models/carModel');
 const { getCurrentTime } = require('../utils/utilities');

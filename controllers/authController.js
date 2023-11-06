@@ -1,6 +1,6 @@
 const { validateSignUp, validateSignIn } = require("../helpers/validation");
 const createError = require("http-errors");
-const User = require("../models/userModal");
+const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
 const {

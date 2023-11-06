@@ -35,7 +35,7 @@ const scheduleChangeNoticeSchema = new mongoose.Schema({
 });
 
 scheduleChangeNoticeSchema.pre(/^find/, function(next) {
-    this.populate({ path: 'students.student', select: 'name email' }).populate({path: 'teacher', select: 'name email'})
+    this.populate({ path: 'students.student', select: 'name email phone' }).populate({path: 'teacher', select: 'name email phone'})
     next()
 })
 

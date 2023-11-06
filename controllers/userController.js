@@ -1,6 +1,6 @@
 const multer = require("multer");
 const createError = require("http-errors");
-const User = require("../models/userModal");
+const User = require("../models/userModel");
 const factory = require("../controllers/hanlderFactory");
 
 const multerStorage = multer.diskStorage({  
