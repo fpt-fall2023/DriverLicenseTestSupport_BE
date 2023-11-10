@@ -10,13 +10,13 @@ exports.getAllQuestionBank = factory.getAll(questionBankModel);
 exports.getQuestionBank = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const data = await questionBankModel.findById(id);
+        const sampleTest = await questionBankModel.findById(id);
 
-        if(!data) {
+        if(!sampleTest) {
             throw createError.NotFound('can not find question bank with that Id');
         }
 
-        const { _id, questionBankName, question } = data
+        const { _id, questionBankName, question } = sampleTest
 
         const randomQuestion = shuffleData(question);
 

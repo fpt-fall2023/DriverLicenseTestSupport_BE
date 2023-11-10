@@ -29,7 +29,7 @@ const testResultSchema = new mongoose.Schema({
 });
 
 testResultSchema.virtual("isPass").get(function () {
-    if(this.sampleTestId.testType === "B1") {
+    if(this?.sampleTestId?.testType === "B1") {
         return this.numRightQuestion >= 28
     }else {
         return this.numRightQuestion >= 32  
